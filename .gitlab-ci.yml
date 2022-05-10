@@ -1,26 +1,32 @@
 image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-20.04-latest
 
-.BSP-3.0.0:
+.ewaol-hardknott:
   stage: build
   tags:
     - yocto
   variables:
     GIT_STRATEGY: none
-    POKY_REV: bba323389749ec3e306509f8fb12649f031be152
-    OPENEMBEDDED_REV: ec978232732edbdd875ac367b5a9c04b881f2e19
-    GPLV2_REV: 60b251c25ba87e946a0ca4cdc8d17b1cb09292ac
-    CONF_DIR: meta-renesas/docs/template/conf/${PLATFORM}
+    POKY_REV: 269265c00091fa65f93de6cad32bf24f1e7f72a3
+    OPENEMBEDDED_REV: f44e1a2b575826e88b8cb2725e54a7c5d29cf94a
+    SECURITY_REV: 16c68aae0fdfc20c7ce5cf4da0a9fff8bdd75769
+    VIRTUALIZATION_REV: 7f719ef40896b6c78893add8485fda995b00d51d
+    EWAOL_REV: 116cfb967ed6f97db2096c1de4d9f552ea2d8fbd
+    CONF_DIR: meta-renesas/docs/template/conf/${PLATFORM}/ewaol
   before_script:
     - export
     - rm -rf build && sync
     - mkdir build && cd build
   script:
     - git clone https://git.yoctoproject.org/git/poky
-    - cd poky && git checkout ${POKY_REV} && git cherry-pick 9e444 && cd -
+    - cd poky && git checkout ${POKY_REV} && cd -
     - git clone https://github.com/openembedded/meta-openembedded
     - cd meta-openembedded && git checkout ${OPENEMBEDDED_REV}  && cd -
-    - git clone https://git.yoctoproject.org/git/meta-gplv2
-    - cd meta-gplv2 && git checkout ${GPLV2_REV} && cd -
+    - git clone https://git.yoctoproject.org/meta-security
+    - cd meta-security && git checkout ${SECURITY_REV} && cd -
+    - git clone https://git.yoctoproject.org/meta-virtualization
+    - cd meta-virtualization && git checkout ${VIRTUALIZATION_REV} && cd -
+    - git clone https://git.gitlab.arm.com/ewaol/meta-ewaol.git
+    - cd meta-ewaol && git checkout ${EWAOL_REV} && cd -
     - git clone git@gitlab.renesas.solutions:spl2/civil-infrastructure-platform/meta-renesas.git
     - cd meta-renesas && git checkout ${CI_COMMIT_REF_NAME} && cd -
     - source poky/oe-init-build-env
@@ -31,8 +37,8 @@ image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubu
     paths:
       - build/build/tmp/deploy/images/
 
-BSP-3.0.0_smarc-rzg2l_core-image-minimal:
-  extends: .BSP-3.0.0
+smarc-rzg2l_core-image-minimal:
+  extends: .ewaol-hardknott
   variables:
     PLATFORM: smarc-rzg2l
     IMAGE: core-image-minimal
