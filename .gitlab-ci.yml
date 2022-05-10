@@ -47,7 +47,9 @@ image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubu
   artifacts:
     expire_in: 1 week
     paths:
+      - build/build/conf/
       - build/build/tmp/deploy/images/
+    when: always
 
 smarc-rzg2l_core-image-minimal:
   extends: .ewaol-hardknott
