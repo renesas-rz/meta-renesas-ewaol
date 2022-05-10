@@ -35,6 +35,7 @@ image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubu
     - cp ${CI_PROJECT_DIR}/build/${CONF_DIR}/*.conf conf/
     - echo "DL_DIR=\"${DL_DIR}\"" >> conf/local.conf
     - echo "SSTATE_DIR=\"${SSTATE_DIR}\"" >> conf/local.conf
+    - if [[ "${IMAGE}" == *"-sdk" ]]; then echo "DISTRO_FEATURES_append=\" ewaol-sdk\"" >> conf/local.conf; fi
     - bitbake ${IMAGE}
   cache:
     - key: "downloads"
@@ -53,3 +54,30 @@ smarc-rzg2l_core-image-minimal:
   variables:
     PLATFORM: smarc-rzg2l
     IMAGE: core-image-minimal
+  when: manual
+
+smarc-rzg2l_ewaol-image-docker:
+  extends: .ewaol-hardknott
+  variables:
+    PLATFORM: smarc-rzg2l
+    IMAGE: ewaol-image-docker
+
+smarc-rzg2l_ewaol-image-docker-sdk:
+  extends: .ewaol-hardknott
+  variables:
+    PLATFORM: smarc-rzg2l
+    IMAGE: ewaol-image-docker-sdk
+  when: manual
+
+smarc-rzg2l_ewaol-image-podman:
+  extends: .ewaol-hardknott
+  variables:
+    PLATFORM: smarc-rzg2l
+    IMAGE: ewaol-image-podman
+
+smarc-rzg2l_ewaol-image-podman-sdk:
+  extends: .ewaol-hardknott
+  variables:
+    PLATFORM: smarc-rzg2l
+    IMAGE: ewaol-image-podman-sdk
+  when: manual
