@@ -12,6 +12,8 @@ image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubu
     VIRTUALIZATION_REV: 7f719ef40896b6c78893add8485fda995b00d51d
     EWAOL_REV: 116cfb967ed6f97db2096c1de4d9f552ea2d8fbd
     CONF_DIR: meta-renesas/docs/template/conf/${PLATFORM}/ewaol
+    DL_DIR: ${CI_PROJECT_DIR}/downloads
+    SSTATE_DIR: ${CI_PROJECT_DIR}/sstate_cache
   before_script:
     - export
     - rm -rf build && sync
@@ -31,7 +33,16 @@ image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubu
     - cd meta-renesas && git checkout ${CI_COMMIT_REF_NAME} && cd -
     - source poky/oe-init-build-env
     - cp ${CI_PROJECT_DIR}/build/${CONF_DIR}/*.conf conf/
+    - echo "DL_DIR=\"${DL_DIR}\"" >> conf/local.conf
+    - echo "SSTATE_DIR=\"${SSTATE_DIR}\"" >> conf/local.conf
     - bitbake ${IMAGE}
+  cache:
+    - key: "downloads"
+      paths:
+        - ${DL_DIR}
+    - key: "sstate-cache-${PLATFORM}-${IMAGE}"
+      paths:
+        - ${SSTATE_DIR}
   artifacts:
     expire_in: 1 week
     paths:
