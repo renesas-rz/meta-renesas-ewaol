@@ -1,0 +1,38 @@
+image: gitlab.renesas.solutions:5050/spl2/continuous-integration/dockerfiles:ubuntu-20.04-latest
+
+.BSP-3.0.0:
+  stage: build
+  tags:
+    - yocto
+  variables:
+    GIT_STRATEGY: none
+    POKY_REV: bba323389749ec3e306509f8fb12649f031be152
+    OPENEMBEDDED_REV: ec978232732edbdd875ac367b5a9c04b881f2e19
+    GPLV2_REV: 60b251c25ba87e946a0ca4cdc8d17b1cb09292ac
+    CONF_DIR: meta-renesas/docs/template/conf/${PLATFORM}
+  before_script:
+    - export
+    - rm -rf build && sync
+    - mkdir build && cd build
+  script:
+    - git clone https://git.yoctoproject.org/git/poky
+    - cd poky && git checkout ${POKY_REV} && git cherry-pick 9e444 && cd -
+    - git clone https://github.com/openembedded/meta-openembedded
+    - cd meta-openembedded && git checkout ${OPENEMBEDDED_REV}  && cd -
+    - git clone https://git.yoctoproject.org/git/meta-gplv2
+    - cd meta-gplv2 && git checkout ${GPLV2_REV} && cd -
+    - git clone git@gitlab.renesas.solutions:spl2/civil-infrastructure-platform/meta-renesas.git
+    - cd meta-renesas && git checkout ${CI_COMMIT_REF_NAME} && cd -
+    - source poky/oe-init-build-env
+    - cp ${CI_PROJECT_DIR}/build/${CONF_DIR}/*.conf conf/
+    - bitbake ${IMAGE}
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - build/build/tmp/deploy/images/
+
+BSP-3.0.0_smarc-rzg2l_core-image-minimal:
+  extends: .BSP-3.0.0
+  variables:
+    PLATFORM: smarc-rzg2l
+    IMAGE: core-image-minimal
