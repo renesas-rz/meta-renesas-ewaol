@@ -1,3 +1,33 @@
+# meta-renesas-ewaol
+
+This repository is a fork of
+[meta-renesas](https://github.com/renesas-rz/meta-renesas) that includes support
+for Arm's Edge Workload Abstraction and Orchestration Layer
+([EWAOL](https://git.gitlab.arm.com/ewaol/meta-ewaol)).
+
+Documentation on this work can be found in
+[docs/ewaol-integration.md](docs/ewaol-integration.md).
+
+This branch is based on the meta-renesas
+[BSP-3.0.0](https://github.com/renesas-rz/meta-renesas/tree/BSP-3.0.0) tag.
+
+This work is currently experimental and no warrenty is offered.
+
+---
+
+Send pull requests, patches, comments or questions to: **Chris Paterson**
+<[chris.paterson2@renesas.com](mailto:chris.paterson2@renesas.com)>
+
+
+Maintainer: **Chris Paterson**
+<[chris.paterson2@renesas.com](mailto:chris.paterson2@renesas.com)>
+
+---
+
+The original meta-renesas README.md continues below...
+
+---
+
 # meta-renesas
 
 This is a Yocto build layer(version:dunfell) that provides support for the RZ/G2 Group of 64bit Arm-based MPUs from Renesas Electronics.
@@ -30,7 +60,7 @@ This layer depends on:
     layers: meta-oe, meta-python, meta-multimedia
     branch: dunfell
     revision: ec978232732edbdd875ac367b5a9c04b881f2e19
-    
+
     URI: http://git.yoctoproject.org/cgit.cgi/meta-gplv2/
     layers: meta-gplv2
     branch: dunfell
@@ -70,14 +100,14 @@ You can get all Yocto build environment from Renesas, or download all Yocto rela
     $ git checkout dunfell-23.0.14
     $ git cherry-pick 9e444
     $ cd ..
-    $     
+    $
     $ git clone https://github.com/openembedded/meta-openembedded
     $ cd meta-openembedded
     $ git checkout ec978232732edbdd875ac367b5a9c04b881f2e19
     $ cd ..
-    $    
+    $
     $ git clone https://git.yoctoproject.org/git/meta-gplv2
-    $ cd meta-gplv2 
+    $ cd meta-gplv2
     $ git checkout 60b251c25ba87e946a0ca4cdc8d17b1cb09292ac
     $
     $ git clone  https://github.com/renesas-rz/meta-renesas.git
@@ -106,7 +136,7 @@ Now the latest version is **BSP-3.0.x**
     $ cd ..
     $
     $ cp vspmfilter.tar.xz meta-renesas/recipes-common/recipes-multimedia/gstreamer/gstreamer1.0-plugin-vspmfilter
-    $ 
+    $
 ```
 
 Initialize a build using the 'oe-init-build-env' script in Poky. e.g.:
